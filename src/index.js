@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // app.use(bodyParser.json());
 
 app.post("/service", (req, res) => {
+  let custom = false;
   let caption = "";
   let offset = 0;
   let text = req.body.text;
@@ -24,6 +25,7 @@ app.post("/service", (req, res) => {
     return res.status(403);
   }
   if (text.indexOf("caption:") > -1 && text.indexOf("result:") > -1) {
+    custom = true;
     const arrayOfWhole = text.split(" ");
     // console.log(arrayOfWhole);
     const indexOfCaption = arrayOfWhole.indexOf("caption:");
@@ -40,7 +42,7 @@ app.post("/service", (req, res) => {
     // console.log(offset);
     text = arrayOfWhole.join(" ");
   }
-  queryService(service, text, response_url, offset, caption);
+  queryService(service, text, response_url, offset, caption, custom);
   return res.sendStatus(200);
 });
 

@@ -10,7 +10,8 @@ const queryService = (
   q,
   response_url,
   offset = 0,
-  caption = undefined
+  caption = undefined,
+  custom = false
 ) => {
   const lineLength = service === "frinkiac" ? 28 : 24;
   axios
@@ -56,7 +57,7 @@ const queryService = (
           const memeURL = `https://${service}.com/meme/${Episode}/${Timestamp}.jpg?lines=${encoded}`;
           const generatorPageURL = `https://${service}.com/caption/${Episode}/${Timestamp}`;
           shortlist[0].memeURL = memeURL;
-          const attachments = [
+          let attachments = [
             {
               text: "",
               image_url: memeURL,
@@ -90,12 +91,23 @@ const queryService = (
               color: "good"
             }
           ];
+          if (custom) {
+            attachments = [{
+              text: "",
+              image_url: memeURL,
+              color: "good"
+            }];
+          }
+          const completePostObject = {
+            "response_type": "in_channel",
+            "text": `${service} result #${offset} for "${q}"`,
+            "attachments": attachments
+          };
+          if (custom) {
+            completePostObject.text = `custom ${service} result for ${q}`;
+          }
           axios
-            .post(response_url, {
-              "response_type": "in_channel",
-              "text": `${service} result #${offset} for "${q}"`,
-              "attachments": attachments
-            })
+            .post(response_url, completePostObject)
             .then(() => console.log("posted"))
             .catch(() => console.log("error posting response to slack"));
         })
