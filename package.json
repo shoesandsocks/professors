@@ -1,15 +1,15 @@
 {
   "name": "@shoesandsocks/professor",
   "version": "1.0.0",
-  "description": "",
+  "description": "A Slack app with slash commands /frinkiac and /morbotron",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "backpack",
     "build": "backpack build",
-    "start": "node ./build/main.js"
+    "start": "node ./build/main.js",
+    "postinstall": "backpack build"
   },
-  "author": "",
+  "author": "RL Brown <rlbrown72@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "axios": "^0.16.1",
