@@ -81,6 +81,9 @@ app.post("/", (req, res) => {
 
 app.get("/oauth", (req, res) => {
   const { code } = req.query;
+  if (!code) {
+    return res.redirect("/");
+  }
   // TODO: add a state-check to html and here, for security
   axios
     .post(
