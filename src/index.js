@@ -89,6 +89,7 @@ app.get("/oauth", (req, res) => {
     "https://slack.com/api/oauth.access",
     data,
     (cbErr, respo, body) => {
+      console.log("body" + JSON.parse(body));
       if (!cbErr && respo.statusCode === 200) {
         const token = JSON.parse(body).access_token;
         request.post(
