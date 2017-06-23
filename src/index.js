@@ -27,26 +27,28 @@ app.post("/service", (req, res) => {
   if (text.indexOf("caption:") > -1 && text.indexOf("result:") > -1) {
     custom = true;
     const arrayOfWhole = text.split(" ");
-    // console.log(arrayOfWhole);
     const indexOfCaption = arrayOfWhole.indexOf("caption:");
     const arrayOfNewCaption = arrayOfWhole.splice(indexOfCaption, arrayOfWhole.length);
-    // console.log(arrayOfNewCaption);
     arrayOfNewCaption.shift(); // removes 'caption:'
     caption = arrayOfNewCaption.join(" ");
-    // console.log(newCaption);
     const indexOfResult = arrayOfWhole.indexOf("result:");
     const arrayOfResult = arrayOfWhole.splice(indexOfResult, arrayOfWhole.length);
-    // console.log(arrayOfResult);
     arrayOfResult.shift(); // removes 'result:'
     offset = parseInt(arrayOfResult[0], 10); // number-as-string in array
-    // console.log(offset);
     text = arrayOfWhole.join(" ");
   }
   queryService(service, text, response_url, offset, caption, custom);
-  return res.json({
-    "response_type": "in_channel",
-    "text": `${command} searching for ${text}...`
-  });
+  if (!custom) {
+    return res.json({
+      "response_type": "in_channel",
+      "text": `${command} searching for ${text}...`
+    });
+  } else {
+    return res.json({
+      "response_type": "in_channel",
+      "text": `${command} custom caption comin'...`
+    });
+  }
 });
 
 app.post("/", (req, res) => {
