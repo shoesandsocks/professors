@@ -43,7 +43,10 @@ app.post("/service", (req, res) => {
     text = arrayOfWhole.join(" ");
   }
   queryService(service, text, response_url, offset, caption, custom);
-  return res.sendStatus(200);
+  return res.json({
+    "response_type": "in_channel",
+    "text": `${command} ${text}`
+  });
 });
 
 app.post("/", (req, res) => {
