@@ -3,8 +3,7 @@
 import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
-import axios from "axios";
-import querystring from "querystring";
+import request from "request";
 import { queryService } from "./utils";
 
 require("dotenv").config();
@@ -85,29 +84,30 @@ app.get("/oauth", (req, res) => {
     return res.redirect("/");
   }
   // TODO: add a state-check to html and here, for security
-  axios
-    .post(
-      "https://slack.com/api/oauth.access",
-      querystring.stringify({ code, clientId, clientSecret })
-    )
-    .then(response => {
-      const { access_token, scope, team } = JSON.parse(response);
-      console.log(access_token, scope, team);
-      axios.post("https://slack.com/api/team.info", querystring.stringify({ access_token }))
-        .then(resp => {
-          console.log(resp);
-          const teem = JSON.parse(resp.team);
-          return res.redirect(`http://${teem.domain}.slack.com`);
-        })
-        .catch(err2 => {
-          console.log(err2);
-          res.send({ err2 });
-        });
-    })
-    .catch(err => {
-      console.log(err);
-      res.send({ err });
-    });
+  const data = { form: { code, clientId, clientSecret } };
+  request.post(
+    "https://slack.com/api/oauth.access",
+    data,
+    (cbErr, respo, body) => {
+      if (!cbErr && respo.statusCode === 200) {
+        const token = JSON.parse(body).access_token;
+        request.post(
+          "https://slack.com/api/team.info",
+          { form: { token } },
+          (error, response, bod) => {
+            if (!error && response.statusCode === 200) {
+              if (JSON.parse(bod).error === "missing_scope") {
+                res.send("Added!");
+              } else {
+                const team = JSON.parse(bod).team.domain;
+                res.redirect(`http://${team}.slack.com`);
+              }
+            }
+          }
+        );
+      }
+    }
+  );
 });
 
 app.use(express.static(path.join(__dirname, "../public")));
