@@ -46,7 +46,7 @@ app.post("/service", (req, res) => {
   } else {
     return res.json({
       "response_type": "in_channel",
-      "text": `${command} custom caption comin'...`
+      "text": `${service} custom caption comin'...`
     });
   }
 });
