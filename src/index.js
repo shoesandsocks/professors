@@ -12,9 +12,9 @@ const app = express();
 const appToken = process.env.APP_TOKEN;
 
 app.use(bodyParser.urlencoded({ extended: false }));
-// app.use(bodyParser.json());
 
 app.post("/service", (req, res) => {
+  console.log(req.body);
   let custom = false;
   let caption = "";
   let offset = 0;
