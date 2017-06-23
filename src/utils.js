@@ -1,0 +1,107 @@
+/* eslint-disable quote-props, camelcase */
+import axios from "axios";
+
+require("dotenv").config();
+
+const encode = str => encodeURIComponent(str).replace(/%20/g, "+");
+
+const queryService = (
+  service,
+  q,
+  response_url,
+  offset = 0,
+  caption = undefined
+) => {
+  const lineLength = service === "frinkiac" ? 28 : 24;
+  axios
+    .get(`https://${service}.com/api/search?q=${q}`)
+    .then(response => {
+      const shortlist = response.data.splice(offset, 1);
+      const { Episode, Timestamp } = shortlist[0];
+      shortlist[
+        0
+      ].image_url = `https://${service}.com/img/${Episode}/${Timestamp}.jpg`;
+
+      const captionURL = `https://${service}.com/api/caption?e=${Episode}&t=${Timestamp}`;
+      axios
+        .get(captionURL)
+        .then(rep => {
+          // stealing this pattern from the hubot-frinkiac
+          let line = "";
+          const lines = [];
+          let subs = rep.data.Subtitles
+            .map(s => s.Content)
+            .join(" ")
+            .split(" ");
+
+          // insert override caption here, eventually
+          if (caption && typeof caption === "string") {
+            subs = caption.split(" ");
+          }
+          while (subs.length > 0) {
+            const word = subs.shift();
+            if (line.length === 0 || line.length + word.length <= lineLength) {
+              line += ` ${word}`;
+            } else {
+              lines.push(line);
+              line = "";
+              subs.unshift(word);
+            }
+          }
+          if (line.length > 0) {
+            lines.push(line);
+          }
+          const joined = lines.join("\n");
+          const encoded = encode(joined);
+          const memeURL = `https://${service}.com/meme/${Episode}/${Timestamp}.jpg?lines=${encoded}`;
+          const generatorPageURL = `https://${service}.com/caption/${Episode}/${Timestamp}`;
+          shortlist[0].memeURL = memeURL;
+          const attachments = [
+            {
+              text: "",
+              image_url: memeURL,
+              color: "good",
+              callback_id: "results-buttons",
+              actions: [
+                {
+                  name: `${q}`,
+                  text: "Next result",
+                  type: "button",
+                  value: parseInt(offset, 10) + 1
+                },
+                {
+                  name: `${q}%%%random`,
+                  text: "Random result",
+                  type: "button",
+                  value: parseInt(offset, 10) + 1
+                }
+              ]
+            },
+            {
+              text: `${service} page for this caption: ${generatorPageURL}`,
+              color: "warning"
+            },
+            {
+              text: `${service} search page for "${q}": https://${service}.com/?q=${encodeURIComponent(q)}`,
+              color: "danger"
+            },
+            {
+              text: `DIY caption like so: "/${service} ${q} result: ${offset} caption: clever words"`,
+              color: "good"
+            }
+          ];
+          axios
+            .post(response_url, {
+              "response_type": "in_channel",
+              "text": `${service} result #${offset} for "${q}"`,
+              "attachments": attachments
+            })
+            .then(() => console.log("posted"))
+            .catch(() => console.log("error posting response to slack"));
+        })
+        .catch(error1 => console.log(error1));
+    })
+    .catch(err => console.log(err));
+};
+
+exports.queryService = queryService;
