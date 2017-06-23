@@ -99,6 +99,7 @@ app.get("/oauth", (req, res) => {
               if (JSON.parse(bod).error === "missing_scope") {
                 res.send("Added!");
               } else {
+                console.log(JSON.parse(bod));
                 const team = JSON.parse(bod).team.domain;
                 res.redirect(`http://${team}.slack.com`);
               }
