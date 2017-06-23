@@ -45,7 +45,7 @@ app.post("/service", (req, res) => {
   queryService(service, text, response_url, offset, caption, custom);
   return res.json({
     "response_type": "in_channel",
-    "text": `${command} ${text}`
+    "text": `${command} searching for ${text}...`
   });
 });
 
