@@ -4,18 +4,63 @@
         <meta charset="UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="slack-app-id" content="A5T5D4Z43">
+        <link href="https://fonts.googleapis.com/css?family=Bubbler+One|Karla" rel="stylesheet">
         <title>The Professors</title>
+        <style>
+          body {
+            background: linear-gradient(45deg,#1db3dc, #71e4a1) fixed;
+            font-family: "Bubbler One", sans-serif;
+            color: #eff;
+          }
+          p {
+            font-family: "Karla", sans-serif;
+          }
+          h1 {
+            font-size: 3em;
+            padding-top: 5%;
+            padding-left: 15%
+          }
+          h2, p {
+            padding-left: 15%
+          }
+          h2 {
+            font-size: 2em;
+          }
+          p {
+            font-size: 1.5em;
+            padding-right: 15%;
+          }
+          #aWrap {
+            padding-left: 0;
+            padding-right: 0;
+            text-align: center;
+          }
+          .spacer {
+            height: 15vh;
+          }
+          a {
+            color: #eff;
+          }
+        </style>
     </head>
     <body>
-        <h1>good news everyone</h1>
-        <a href="https://slack.com/oauth/authorize?scope=commands+team%3Aread&client_id=11083475395.197183169139">
-        <img
-            alt="Add to Slack"
-            height="40"
-            width="139"
-            src="https://platform.slack-edge.com/img/add_to_slack.png"
-            srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
-        </a>
+        <h1>The Professors are here!</h1>
+        <p>This app adds two slash-comands, <code>/frinkiac</code> and <code>/morbotron</code>, to your Slack. You'll figure it out.</p>
+        <p id="aWrap">
+            <a href="https://slack.com/oauth/authorize?scope=commands+team%3Aread&client_id=11083475395.197183169139">
+                <img
+                    alt="Add to Slack"
+                    height="40"
+                    width="139"
+                    src="https://platform.slack-edge.com/img/add_to_slack.png"
+                    srcset="https://platform.slack-edge.com/img/add_to_slack.png 1x, https://platform.slack-edge.com/img/add_to_slack@2x.png 2x" />
+            </a>
+        </p>
+        <div class="spacer"></div>
+        <h2 id="privacy">Privacy policy</h2>
+        <p>I am not a jerk. (I don't think I can get anything 'private' about you with this app, but if I can it won't go anywhere.)</p>
 
+        <h2 id="support">Support</h2>
+        <p>How about twitter? <a href="https://twitter.com/Easement1">@easement1</a>. (That's a one. Easement One.)</p>
     </body>
 </html>
