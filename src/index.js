@@ -11,8 +11,8 @@ require("dotenv").config();
 const port = process.env.PORT;
 const app = express();
 const appToken = process.env.APP_TOKEN;
-const clientId = process.env.CLIENT_ID;
-const clientSecret = process.env.CLIENT_SECRET;
+const client_id = process.env.CLIENT_ID;
+const client_secret = process.env.CLIENT_SECRET;
 
 app.use(bodyParser.urlencoded({ extended: false }));
 
@@ -84,7 +84,7 @@ app.get("/oauth", (req, res) => {
     return res.redirect("/");
   }
   // TODO: add a state-check to html and here, for security
-  const data = { form: { code, clientId, clientSecret } };
+  const data = { form: { code, client_id, client_secret } };
   request.post(
     "https://slack.com/api/oauth.access",
     data,
