@@ -1,4 +1,4 @@
-/* eslint-disable no-console */
+/* eslint-disable camelcase */
 
 import express from "express";
 import path from "path";
@@ -17,7 +17,6 @@ const client_secret = process.env.CLIENT_SECRET;
 app.use(bodyParser.urlencoded({ extended: false }));
 
 app.post("/service", (req, res) => {
-  console.log(req.body);
   let custom = false;
   let caption = "";
   let offset = 0;
@@ -26,6 +25,12 @@ app.post("/service", (req, res) => {
   const service = command.replace("/", "");
   if (appToken !== token) {
     return res.status(403);
+  }
+  if (text === "help") {
+    return res.json({
+      response_type: "in_channel",
+      text: "Type a word or phrase after /morbotron or /frinkiac, and the app"
+    });
   }
   if (text.indexOf("caption:") > -1 && text.indexOf("result:") > -1) {
     custom = true;
@@ -85,11 +90,11 @@ app.get("/oauth", (req, res) => {
   }
   // TODO: add a state-check to html and here, for security
   const data = { form: { code, client_id, client_secret } };
+  // lifted this .post() from slack engineer's medium blogpost
   request.post(
     "https://slack.com/api/oauth.access",
     data,
     (cbErr, respo, body) => {
-      console.log(JSON.parse(body));
       if (!cbErr && respo.statusCode === 200) {
         const token = JSON.parse(body).access_token;
         request.post(
@@ -100,7 +105,6 @@ app.get("/oauth", (req, res) => {
               if (JSON.parse(bod).error === "missing_scope") {
                 res.send("Added!");
               } else {
-                console.log(JSON.parse(bod));
                 const team = JSON.parse(bod).team.domain;
                 res.redirect(`http://${team}.slack.com`);
               }
@@ -113,4 +117,4 @@ app.get("/oauth", (req, res) => {
 });
 
 app.use(express.static(path.join(__dirname, "../public")));
-app.listen(port, () => console.log(`Listening on ${port}`));
+app.listen(port, () => console.log(`Listening on ${port}`)); // eslint-disable-line
