@@ -29,7 +29,7 @@ app.post("/service", (req, res) => {
   if (text === "help") {
     return res.json({
       response_type: "in_channel",
-      text: "Type a word or phrase after /morbotron or /frinkiac, and the app"
+      text: "Type a word or phrase after /morbotron or /frinkiac, and the app will return a captioned screencap from Futurama or the Simpsons, along with a few helpful buttons and suggestions."
     });
   }
   if (text.indexOf("caption:") > -1 && text.indexOf("result:") > -1) {
