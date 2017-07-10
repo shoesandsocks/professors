@@ -89,8 +89,9 @@ app.get("/oauth", (req, res) => {
     return res.redirect("/");
   }
   // TODO: add a state-check to html and here, for security
-  const data = { form: { code, client_id, client_secret } };
+  const data = { form: { appToken, code, client_id, client_secret } };
   // lifted this .post() from slack engineer's medium blogpost
+  // N.B., added appToken above, though.
   request.post(
     "https://slack.com/api/oauth.access",
     data,
