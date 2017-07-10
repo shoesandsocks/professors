@@ -3,7 +3,13 @@ import axios from "axios";
 
 require("dotenv").config();
 
+// two helper fns
 const encode = str => encodeURIComponent(str).replace(/%20/g, "+");
+const sendError = (response_url, service) =>
+  axios.post(response_url, {
+    "response_type": "ephemeral",
+    "text": `_Something went wrong with ${service}, sorry._`
+  });
 
 const queryService = (
   service,
@@ -111,14 +117,9 @@ const queryService = (
             .then(() => console.log("posted"))
             .catch(() => console.log("error posting response to slack"));
         })
-        .catch(error1 => console.log(error1));
+        .catch(() => sendError(response_url, service));
     })
-    .catch(() => {
-      axios.post(response_url, {
-        "response_type": "ephemeral",
-        "text": `_Something went wrong with ${service}, sorry._`
-      });
-    });
+    .catch(() => sendError(response_url, service));
 };
 
 exports.queryService = queryService;
