@@ -107,6 +107,7 @@ app.get("/oauth", (req, res) => {
           (error, response, bod) => {
             if (!error && response.statusCode === 200) {
               if (JSON.parse(bod).error === "missing_scope") {
+                // not sure what's happening here, alas.
                 res.send("Added!");
               } else {
                 const team = JSON.parse(bod).team.domain;
