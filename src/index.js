@@ -20,9 +20,11 @@ app.post("/service", (req, res) => {
   let custom = false;
   let caption = "";
   let offset = 0;
-  let text = req.body.text;
+  let text = req.body.text; // let, not const; not destructured on next line
   const { token, response_url, command } = req.body;
-  const service = command.replace("/", "");
+  if (!token || !response_url || !command) {
+    return res.status(403);
+  }
   if (appToken !== token) {
     return res.status(403);
   }
@@ -51,6 +53,7 @@ app.post("/service", (req, res) => {
     offset = parseInt(arrayOfResult[0], 10); // number-as-string in array
     text = arrayOfWhole.join(" ");
   }
+  const service = command.replace("/", "");
   queryService(service, text, response_url, offset, caption, custom);
   if (!custom) {
     return res.json({
