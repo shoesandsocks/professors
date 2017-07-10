@@ -2,6 +2,10 @@
   "name": "@shoesandsocks/professor",
   "version": "1.0.0",
   "description": "A Slack app with slash commands /frinkiac and /morbotron",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shoesandsocks/professors.git"
+  },
   "main": "index.js",
   "scripts": {
     "dev": "backpack",
@@ -17,10 +21,7 @@
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.2",
-    "later": "^1.2.0",
-    "request": "^2.81.0",
-    "slack-node": "^0.1.8",
-    "slackbots": "^1.0.2"
+    "request": "^2.81.0"
   },
   "devDependencies": {
     "eslint": "^3.19.0",

@@ -1,4 +1,4 @@
-## Professors
+## The Professor
 
 <a href="https://slack.com/oauth/authorize?scope=commands+team%3Aread&client_id=11083475395.197183169139">
 <img
@@ -12,3 +12,5 @@
 A Slack app that adds two slash commands (`/frinkiac` and `/morbotron`) to interact with the
 somewhat undocumented API behind [frinkiac.com](https://www.frinkiac.com) and 
 [morbotron.com](https://www.morbotron.com).
+
+```/frinkiac help``` or ```/morbotron help``` if you like.
