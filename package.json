@@ -4,7 +4,7 @@
   "description": "A Slack app with slash commands /frinkiac and /morbotron",
   "repository": {
     "type": "git",
-    "url": "https://github.com/shoesandsocks/professors.git"
+    "url": "https://github.com/shoesandsocks/the-professor.git"
   },
   "main": "index.js",
   "scripts": {
