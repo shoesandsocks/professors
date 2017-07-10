@@ -113,7 +113,12 @@ const queryService = (
         })
         .catch(error1 => console.log(error1));
     })
-    .catch(err => console.log(err));
+    .catch(() => {
+      axios.post(response_url, {
+        "response_type": "ephemeral",
+        "text": `Something went wrong with ${service}.`
+      });
+    });
 };
 
 exports.queryService = queryService;
