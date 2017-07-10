@@ -116,7 +116,7 @@ const queryService = (
     .catch(() => {
       axios.post(response_url, {
         "response_type": "ephemeral",
-        "text": `Something went wrong with ${service}.`
+        "text": `_Something went wrong with ${service}, sorry._`
       });
     });
 };

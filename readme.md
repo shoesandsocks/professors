@@ -13,4 +13,6 @@ A Slack app that adds two slash commands (`/frinkiac` and `/morbotron`) to inter
 somewhat undocumented API behind [frinkiac.com](https://www.frinkiac.com) and 
 [morbotron.com](https://www.morbotron.com).
 
+![gif example](https://media.giphy.com/media/l0Iy0fRKgmneoyaXu/giphy.gif)
+
 ```/frinkiac help``` or ```/morbotron help``` if you like.
