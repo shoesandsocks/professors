@@ -96,16 +96,18 @@ app.get("/oauth", (req, res) => {
   // lifted this .post() from slack engineer's medium blogpost
   // N.B., added appToken above, though.
   axios.post("https://slack.com/api/oauth.access", data)
-    .then(respo => {
-      console.log(respo);
-      if (respo.statusCode === 200) {
-        const token = JSON.parse(respo.data).access_token;
+    .then((respo) => {
+      console.log(respo.data);
+      if (respo.status === 200) {
+        const token = respo.data.access_token;
         axios.post("https://slack.com/api/team.info", { form: { token } })
           .then(resbo => {
-            if (resbo.statusCode === 200) {
-              if (JSON.parse(resbo.data).error === "missing_scope") {
+            if (resbo.status === 200) {
+              if (resbo.data.error === "missing_scope") {
                 // not sure what's happening here, alas.
                 res.send("Added!");
+              } else if (resbo.data.error === "invalid code") {
+                res.send("bad code!");
               } else {
                 const team = JSON.parse(resbo.data).team.domain;
                 res.redirect(`http://${team}.slack.com`);
