@@ -97,7 +97,7 @@ app.get("/oauth", (req, res) => {
 
   // lifted this .post() from slack engineer's medium blogpost
   // N.B., added appToken above, though.
-  axios.post("https://slack.com/api/oauth.access", data)
+  axios.post("https://slack.com/api/oauth.access", { data, headers: { "Content-Type": "application/json" } })
     .then((respo) => {
       console.log(respo.data);
       if (respo.status === 200) {
