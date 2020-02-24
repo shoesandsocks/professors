@@ -92,12 +92,19 @@ app.get("/oauth", (req, res) => {
     return res.redirect("/");
   }
   // TODO: add a state-check to html and here, for security
-  const data = { form: { appToken, code, client_id, client_secret } };
-  console.log(data);
-
+  const params = new URLSearchParams();
+  params.append("appToken", appToken);
+  params.append("code", code);
+  params.append("client_id", client_id);
+  params.append("client_secret", client_secret);
   // lifted this .post() from slack engineer's medium blogpost
   // N.B., added appToken above, though.
-  axios.post("https://slack.com/api/oauth.access", data, { headers: { "Content-Type": "application/json" } })
+  axios({
+    method: "POST",
+    url: "https://slack.com/api/oauth.access",
+    params,
+    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+  })
     .then((respo) => {
       console.log(respo);
       if (respo.status === 200) {
