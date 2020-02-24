@@ -3,7 +3,7 @@
 import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
-import request from "request";
+import axios from "axios";
 import { queryService } from "./utils";
 
 require("dotenv").config();
@@ -95,31 +95,31 @@ app.get("/oauth", (req, res) => {
   const data = { form: { appToken, code, client_id, client_secret } };
   // lifted this .post() from slack engineer's medium blogpost
   // N.B., added appToken above, though.
-  request.post(
-    "https://slack.com/api/oauth.access",
-    data,
-    (cbErr, respo, body) => {
-      if (!cbErr && respo.statusCode === 200) {
-        const token = JSON.parse(body).access_token;
-        request.post(
-          "https://slack.com/api/team.info",
-          { form: { token } },
-          (error, response, bod) => {
-            if (!error && response.statusCode === 200) {
-              if (JSON.parse(bod).error === "missing_scope") {
+  axios.post("https://slack.com/api/oauth.access", data)
+    .then(respo => {
+      console.log(respo);
+      if (respo.statusCode === 200) {
+        const token = JSON.parse(respo.data).access_token;
+        axios.post("https://slack.com/api/team.info", { form: { token } })
+          .then(resbo => {
+            if (resbo.statusCode === 200) {
+              if (JSON.parse(resbo.data).error === "missing_scope") {
                 // not sure what's happening here, alas.
                 res.send("Added!");
               } else {
-                const team = JSON.parse(bod).team.domain;
+                const team = JSON.parse(resbo.data).team.domain;
                 res.redirect(`http://${team}.slack.com`);
               }
             }
-          }
-        );
+          })
+          .catch(e => console.log(e));
+      } else {
+        console.log("bort");
       }
-    }
-  );
+    })
+    .catch(gor => console.log("gor!", gor));
 });
 
+
 app.use(express.static(path.join(__dirname, "../public")));
-app.listen(port, () => console.log(`Listening on ${port}`)); // eslint-disable-line
+app.listen(port, () => console.log(`Listening on ${port}`)); //eslint-disable-line
