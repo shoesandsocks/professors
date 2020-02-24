@@ -106,11 +106,19 @@ app.get("/oauth", (req, res) => {
     headers: { "Content-Type": "application/x-www-form-urlencoded" }
   })
     .then((respo) => {
-      console.log(respo);
+      console.log(respo.data);
       if (respo.status === 200) {
         const token = respo.data.access_token;
-        axios.post("https://slack.com/api/team.info", { form: { token } })
+        const params2 = new URLSearchParams();
+        params2.append("token", token);
+        axios({
+          method: "POST",
+          url: "https://slack.com/api/team.info",
+          params: params2,
+          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+        })
           .then(resbo => {
+            console.log(resbo.data);
             if (resbo.status === 200) {
               if (resbo.data.error === "missing_scope") {
                 // not sure what's happening here, alas.
