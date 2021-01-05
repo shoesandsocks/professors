@@ -16,7 +16,7 @@
   "author": "RL Brown <rlbrown72@gmail.com>",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "backpack-core": "^0.3.0",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
