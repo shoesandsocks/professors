@@ -4,7 +4,7 @@ import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
 import axios from "axios";
-import { queryService } from "./utils";
+import queryService from "./utils";
 
 require("dotenv").config();
 
@@ -31,7 +31,8 @@ app.post("/service", (req, res) => {
   if (text === "help") {
     return res.json({
       response_type: "in_channel",
-      text: "Type a word or phrase after /morbotron or /frinkiac, and the app will return a captioned screencap from Futurama or the Simpsons, along with a few helpful buttons and suggestions."
+      text:
+        "Type a word or phrase after /morbotron or /frinkiac, and the app will return a captioned screencap from Futurama or the Simpsons, along with a few helpful buttons and suggestions.",
     });
   }
   if (text.indexOf("caption:") > -1 && text.indexOf("result:") > -1) {
@@ -58,12 +59,12 @@ app.post("/service", (req, res) => {
   if (!custom) {
     return res.json({
       response_type: "in_channel",
-      text: `${command} searching for ${text}...`
+      text: `${command} searching for ${text}...`,
     });
   } else {
     return res.json({
       response_type: "in_channel",
-      text: `${service} custom caption comin'...`
+      text: `${service} custom caption comin'...`,
     });
   }
 });
@@ -80,7 +81,7 @@ app.post("/", (req, res) => {
   }
   if (text.split("%%%")[1] === "random") {
     text = text.split("%%%")[0];
-    offset = Math.floor((Math.random() * 36) + 1);
+    offset = Math.floor(Math.random() * 36 + 1);
   }
   queryService(service, text, response_url, offset);
   return res.sendStatus(200);
@@ -103,7 +104,7 @@ app.get("/oauth", (req, res) => {
     method: "POST",
     url: "https://slack.com/api/oauth.access",
     params,
-    headers: { "Content-Type": "application/x-www-form-urlencoded" }
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
   })
     .then((respo) => {
       if (respo.status === 200) {
@@ -114,9 +115,9 @@ app.get("/oauth", (req, res) => {
           method: "POST",
           url: "https://slack.com/api/team.info",
           params: params2,
-          headers: { "Content-Type": "application/x-www-form-urlencoded" }
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
         })
-          .then(resbo => {
+          .then((resbo) => {
             if (resbo.status === 200) {
               if (resbo.data.error === "missing_scope") {
                 // not sure what's happening here, alas.
@@ -129,14 +130,13 @@ app.get("/oauth", (req, res) => {
               }
             }
           })
-          .catch(e => console.log(e));
+          .catch((e) => console.log(e));
       } else {
         console.log("bort");
       }
     })
-    .catch(gor => console.log("gor!", gor));
+    .catch((gor) => console.log("gor!", gor));
 });
-
 
 app.use(express.static(path.join(__dirname, "../public")));
 app.listen(port, () => console.log(`Listening on ${port}`)); //eslint-disable-line

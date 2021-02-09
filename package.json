@@ -17,7 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "axios": "^0.21.1",
-    "backpack-core": "^0.3.0",
+    "backpack-core": "^0.8.4",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.2"

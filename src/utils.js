@@ -4,40 +4,37 @@ import axios from "axios";
 require("dotenv").config();
 
 // two helper fns
-const encode = str => encodeURIComponent(str).replace(/%20/g, "+");
+const encode = (str) => encodeURIComponent(str).replace(/%20/g, "+");
 const sendError = (response_url, service) =>
   axios.post(response_url, {
-    "response_type": "ephemeral",
-    "text": `_Something went wrong with ${service}, sorry._`
+    response_type: "ephemeral",
+    text: `_Something went wrong with ${service}, sorry._`,
   });
 
-const queryService = (
+export default function queryService(
   service,
   q,
   response_url,
   offset = 0,
   caption = undefined,
   custom = false
-) => {
+) {
   const lineLength = service === "frinkiac" ? 28 : 24;
   axios
     .get(`https://${service}.com/api/search?q=${q}`)
-    .then(response => {
+    .then((response) => {
       const shortlist = response.data.splice(offset, 1);
       const { Episode, Timestamp } = shortlist[0];
-      shortlist[
-        0
-      ].image_url = `https://${service}.com/img/${Episode}/${Timestamp}.jpg`;
+      shortlist[0].image_url = `https://${service}.com/img/${Episode}/${Timestamp}.jpg`;
 
       const captionURL = `https://${service}.com/api/caption?e=${Episode}&t=${Timestamp}`;
       axios
         .get(captionURL)
-        .then(rep => {
+        .then((rep) => {
           // stealing this pattern from the hubot-frinkiac
           let line = "";
           const lines = [];
-          let subs = rep.data.Subtitles
-            .map(s => s.Content)
+          let subs = rep.data.Subtitles.map((s) => s.Content)
             .join(" ")
             .split(" ");
 
@@ -74,40 +71,44 @@ const queryService = (
                   name: `${q}`,
                   text: "Next result",
                   type: "button",
-                  value: parseInt(offset, 10) + 1
+                  value: parseInt(offset, 10) + 1,
                 },
                 {
                   name: `${q}%%%random`,
                   text: "Random result",
                   type: "button",
-                  value: parseInt(offset, 10) + 1
-                }
-              ]
+                  value: parseInt(offset, 10) + 1,
+                },
+              ],
             },
             {
               text: `${service} page for this caption: ${generatorPageURL}`,
-              color: "warning"
+              color: "warning",
             },
             {
-              text: `${service} search page for "${q}": https://${service}.com/?q=${encodeURIComponent(q)}`,
-              color: "danger"
+              text: `${service} search page for "${q}": https://${service}.com/?q=${encodeURIComponent(
+                q
+              )}`,
+              color: "danger",
             },
             {
               text: `DIY caption like so: "/${service} ${q} result: ${offset} caption: clever words"`,
-              color: "good"
-            }
+              color: "good",
+            },
           ];
           if (custom) {
-            attachments = [{
-              text: "",
-              image_url: memeURL,
-              color: "good"
-            }];
+            attachments = [
+              {
+                text: "",
+                image_url: memeURL,
+                color: "good",
+              },
+            ];
           }
           const completePostObject = {
-            "response_type": "in_channel",
-            "text": `${service} result #${offset} for "${q}"`,
-            "attachments": attachments
+            response_type: "in_channel",
+            text: `${service} result #${offset} for "${q}"`,
+            attachments: attachments,
           };
           if (custom) {
             completePostObject.text = `custom ${service} result for ${q}`;
@@ -120,6 +121,4 @@ const queryService = (
         .catch(() => sendError(response_url, service));
     })
     .catch(() => sendError(response_url, service));
-};
-
-exports.queryService = queryService;
+}
